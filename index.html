@@ -1197,6 +1197,109 @@ html, body {
 #popupContainer .popup-dialog {
   pointer-events: auto;
 }
+
+/* ═══ RESPONSIVE / MOBILE ═══ */
+@media (max-width: 768px) {
+  /* Main window fills the screen */
+  .win-window#mainWindow {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100% - 30px) !important;
+    border: none;
+  }
+
+  /* Hide desktop icons on mobile — window covers them anyway */
+  .desktop-icons { display: none; }
+
+  /* Smaller WordArt */
+  .wordart { font-size: 26px; letter-spacing: 1px; }
+  .wordart-sub { font-size: 11px; }
+  .wordart-container { padding: 8px 6px 4px; }
+
+  /* Stack form rows */
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+  .form-row label { min-width: unset; }
+
+  /* Form padding */
+  .app-form { padding: 10px 10px; margin: 6px; }
+  .groupbox { padding: 10px 8px 8px; }
+
+  /* Button */
+  .btn-big { font-size: 14px; padding: 10px 16px; }
+
+  /* Tools grid single column */
+  .tools-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .tools-area { margin: 6px; }
+
+  /* Output */
+  .output-frame { margin: 6px; }
+  .output-text { font-size: 14px; padding: 8px; }
+  .output-header-bar { font-size: 11px; padding: 3px 6px; }
+
+  /* Marquee smaller */
+  .marquee-bar { font-size: 11px; }
+  .construction-bar span { font-size: 10px; }
+
+  /* Progress bar */
+  .progress-container { margin: 6px 10px; }
+  .progress-label { font-size: 10px; }
+
+  /* Visitor counter */
+  .visitor-counter { margin: 4px 6px 6px; padding: 6px; }
+
+  /* Footer */
+  .app-footer { font-size: 9px; padding: 5px; }
+
+  /* Popups smaller and better positioned */
+  .popup-dialog {
+    min-width: 220px;
+    max-width: 280px;
+    font-size: 10px;
+  }
+  .popup-body { padding: 8px 10px; gap: 6px; }
+  .popup-icon-row .p-icon { font-size: 18px; }
+  .popup-icon-row .p-text { font-size: 10px; }
+
+  /* Taskbar */
+  .taskbar { height: 28px; }
+  .start-btn { font-size: 10px; height: 22px; padding: 2px 5px; }
+  .start-btn .win-logo { font-size: 14px; }
+  .taskbar-task { font-size: 10px; height: 22px; max-width: 140px; }
+  .taskbar-tray { font-size: 10px; height: 22px; padding: 2px 5px; gap: 4px; }
+  .tray-icon { font-size: 11px; }
+
+  /* Start menu */
+  .start-menu { width: 180px; }
+  .start-menu-item { padding: 5px 10px; font-size: 10px; }
+  .start-menu-item .item-icon { font-size: 15px; width: 20px; }
+  .start-menu-sidebar { width: 20px; }
+  .start-menu-sidebar span { font-size: 13px; }
+
+  /* Statusbar */
+  .win-status-section { font-size: 10px; }
+
+  /* Message box */
+  .msgbox { min-width: 260px; max-width: 320px; }
+  .msgbox-icon { font-size: 26px; }
+  .msgbox-text { font-size: 10px; }
+}
+
+@media (max-width: 400px) {
+  .wordart { font-size: 20px; }
+  .btn-big { font-size: 12px; }
+  .counter-big { font-size: 32px; }
+  .popup-dialog { min-width: 180px; max-width: 240px; }
+  .win-titlebar-text { font-size: 10px; }
+  .taskbar-task { max-width: 100px; }
+}
 </style>
 </head>
 <body>
@@ -2009,16 +2112,19 @@ function generateApology() {
   ];
 
   const desktopArea = document.querySelector('.desktop-area');
-  const maxX = desktopArea.clientWidth - 320;
-  const maxY = desktopArea.clientHeight - 180;
+  const isMobile = window.innerWidth <= 768;
+  const popW = isMobile ? 240 : 320;
+  const popH = isMobile ? 130 : 180;
+  const maxX = Math.max(10, desktopArea.clientWidth - popW - 10);
+  const maxY = Math.max(10, desktopArea.clientHeight - popH - 10);
 
   for (let p = 0; p < numPopups; p++) {
     const delay = 300 + p * (desperation ? 350 : 500) + Math.random() * 400;
     const duration = 1500 + Math.random() * 2000;
     setTimeout(() => {
       const [title, icon] = popupTitles[Math.floor(Math.random() * popupTitles.length)];
-      const x = 80 + Math.random() * Math.max(100, maxX - 80);
-      const y = 20 + Math.random() * Math.max(60, maxY - 20);
+      const x = 10 + Math.random() * maxX;
+      const y = 10 + Math.random() * maxY;
       const popId = createPopupDialog(
         title,
         icon,
@@ -2037,8 +2143,8 @@ function generateApology() {
   // Desperation: extra error popup
   if (desperation) {
     setTimeout(() => {
-      const x = 100 + Math.random() * Math.max(100, maxX - 100);
-      const y = 40 + Math.random() * Math.max(60, maxY - 40);
+      const x = 10 + Math.random() * maxX;
+      const y = 10 + Math.random() * maxY;
       const errId = createPopupDialog(
         '⚠️ OSTRZEŻENIE',
         '🚨',
@@ -2053,8 +2159,8 @@ function generateApology() {
 
     // "ACCESS GRANTED" hacker popup
     setTimeout(() => {
-      const x = 60 + Math.random() * Math.max(100, maxX - 60);
-      const y = 60 + Math.random() * Math.max(60, maxY - 60);
+      const x = 10 + Math.random() * maxX;
+      const y = 10 + Math.random() * maxY;
       const hackId = createPopupDialog(
         'root@gogola:~# DOSTĘP',
         '💀',
