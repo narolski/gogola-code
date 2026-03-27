@@ -44,35 +44,29 @@ html, body {
   flex-direction: column;
 }
 
-/* Starfield background */
+/* Win95 Clouds Wallpaper */
 .desktop::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(1px 1px at 10% 20%, white, transparent),
-    radial-gradient(1px 1px at 30% 70%, white, transparent),
-    radial-gradient(1.5px 1.5px at 50% 10%, #ffff88, transparent),
-    radial-gradient(1px 1px at 70% 40%, white, transparent),
-    radial-gradient(1px 1px at 90% 80%, white, transparent),
-    radial-gradient(1.5px 1.5px at 15% 90%, #88ffff, transparent),
-    radial-gradient(1px 1px at 85% 15%, white, transparent),
-    radial-gradient(1px 1px at 45% 55%, white, transparent),
-    radial-gradient(1.5px 1.5px at 60% 85%, #ffff88, transparent),
-    radial-gradient(1px 1px at 25% 45%, white, transparent),
-    radial-gradient(1px 1px at 75% 65%, white, transparent),
-    radial-gradient(1px 1px at 5% 50%, white, transparent),
-    radial-gradient(1.5px 1.5px at 95% 50%, #88ffff, transparent),
-    radial-gradient(1px 1px at 35% 30%, white, transparent),
-    radial-gradient(1px 1px at 55% 95%, white, transparent),
-    radial-gradient(1px 1px at 80% 5%, white, transparent);
-  animation: twinkle 4s ease-in-out infinite alternate;
+    /* Big fluffy clouds */
+    radial-gradient(ellipse 180px 80px at 15% 30%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.4) 40%, transparent 70%),
+    radial-gradient(ellipse 220px 70px at 18% 28%, rgba(255,255,255,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 250px 100px at 70% 20%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 45%, transparent 70%),
+    radial-gradient(ellipse 200px 60px at 75% 18%, rgba(255,255,255,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 300px 90px at 45% 55%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 40%, transparent 65%),
+    radial-gradient(ellipse 160px 70px at 48% 52%, rgba(255,255,255,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 200px 80px at 85% 65%, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.25) 45%, transparent 70%),
+    radial-gradient(ellipse 180px 55px at 88% 62%, rgba(255,255,255,0.4) 0%, transparent 55%),
+    radial-gradient(ellipse 160px 70px at 25% 75%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 45%, transparent 70%),
+    radial-gradient(ellipse 140px 50px at 28% 73%, rgba(255,255,255,0.4) 0%, transparent 55%),
+    radial-gradient(ellipse 220px 85px at 55% 85%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.2) 40%, transparent 65%),
+    radial-gradient(ellipse 130px 60px at 5% 60%, rgba(255,255,255,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 170px 55px at 95% 40%, rgba(255,255,255,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 140px 50px at 35% 10%, rgba(255,255,255,0.55) 0%, transparent 55%),
+    radial-gradient(ellipse 190px 65px at 60% 42%, rgba(255,255,255,0.45) 0%, transparent 55%);
   pointer-events: none;
-}
-
-@keyframes twinkle {
-  0% { opacity: 0.3; }
-  100% { opacity: 0.7; }
 }
 
 .desktop-area {
@@ -1096,12 +1090,122 @@ html, body {
   border-bottom: 2px solid var(--win-black);
 }
 .win-body::-webkit-scrollbar-button { display: block; height: 16px; background: var(--win-gray); border: 1px outset var(--win-gray); }
+
+/* ═══ FLOATING POPUP DIALOGS ═══ */
+.popup-dialog {
+  position: absolute;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  box-shadow: inset 1px 1px 0 var(--win-light), inset -1px -1px 0 var(--win-dark), 3px 3px 0 rgba(0,0,0,0.25);
+  z-index: 3000;
+  min-width: 280px;
+  max-width: 380px;
+  animation: popupAppear 0.15s ease-out;
+  font-size: 11px;
+}
+
+@keyframes popupAppear {
+  0% { transform: scale(0.5); opacity: 0; }
+  80% { transform: scale(1.03); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.popup-dialog.closing {
+  animation: popupClose 0.12s ease-in forwards;
+}
+
+@keyframes popupClose {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+.popup-titlebar {
+  background: var(--win-title-active);
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 18px;
+}
+
+.popup-titlebar span {
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.popup-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.popup-icon-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.popup-icon-row .p-icon { font-size: 24px; flex-shrink: 0; }
+.popup-icon-row .p-text { font-size: 11px; line-height: 1.5; padding-top: 2px; }
+
+.popup-progress {
+  width: 100%;
+  height: 16px;
+  background: white;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  box-shadow: inset 1px 1px 0 var(--win-black);
+  overflow: hidden;
+}
+
+.popup-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: repeating-linear-gradient(
+    90deg,
+    #000080 0px, #000080 8px,
+    transparent 8px, transparent 10px
+  );
+  transition: width 0.4s ease;
+}
+
+.popup-status {
+  font-size: 10px;
+  color: #444;
+  font-style: italic;
+  text-align: center;
+}
+
+#popupContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3000;
+}
+
+#popupContainer .popup-dialog {
+  pointer-events: auto;
+}
 </style>
 </head>
 <body>
 
 <div class="desktop">
   <div class="desktop-area">
+    <!-- Popup container for floating dialogs -->
+    <div id="popupContainer"></div>
+
     <!-- Desktop Icons -->
     <div class="desktop-icons">
       <div class="desktop-icon" ondblclick="openApp()">
@@ -1708,6 +1812,131 @@ function getRandomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+// ═══ SIMS-STYLE LOADING MESSAGES ═══
+const simsMessages = [
+  // Absurdalne techniczne
+  "Komputuję podzespół inwokacji żalu...",
+  "Defragmentacja sumienia w toku...",
+  "Dekompresja modułu łez krokodylowych...",
+  "Inicjalizuję protokół klęczenia...",
+  "Kalibruję współczynnik skruchy...",
+  "Mapowanie receptorów żalu w korze mózgowej...",
+  "Pingowanie serwera przebaczenia... timeout... ponawiam...",
+  "Instalowanie sterowników empatii v3.7...",
+  "Formatowanie twardego dysku dumy...",
+  "Kompilowanie szczerości... znaleziono 3 błędy... ignoruję...",
+  "Ładowanie biblioteki wymówek... ODRZUCONE... ładuję szczerość...",
+  "Skanowanie portów emocjonalnych...",
+  "Uruchamiam firewall antydumowy...",
+  "Deserializacja obiektu klasy Żal<T>...",
+  "Haszowanie wstydu algorytmem SHA-SORRY...",
+  "Alokacja pamięci na wyrzuty sumienia: 2.4 GB...",
+  "Renderowanie trójwymiarowego modelu skruchy...",
+  "Synchronizacja z satelitą przeprosinowym SORRY-1...",
+  "Odpalanie neuronowej sieci empatycznej...",
+  "Dekodowanie protokołu TCP/SORRY...",
+  // Absurdalne emocjonalne
+  "Symulowanie szczerych łez... kalibracjaciśnienia... OK",
+  "Sprawdzanie czy kolana są gotowe do klęczenia...",
+  "Ładowanie tonów głosu: żałosny, błagalny, skruszony...",
+  "Obliczanie optymalnej ilości kwiatów...",
+  "Weryfikacja poziomu patetyczności... WYSTARCZAJĄCY",
+  "Generowanie mikro-wyrazu twarzy: żal #47...",
+  "Aktywacja gruczołu łzowego... lewy... prawy... OK",
+  "Przygotowywanie argumentu \"to się więcej nie powtórzy\"...",
+  "Ładowanie bazy danych wymówek... USUNIĘTA... dobrze...",
+  "Optymalizacja trajektorii rzucania się na kolana...",
+  "Rozgrzewanie silnika Skrucha™...",
+  "Pobieranie aktualizacji modułu płakania...",
+  "Buforowanie westchnięć... bufor pełny...",
+  "Kompresja dumy własnej... 98% kompletne...",
+  "Walidacja certyfikatu szczerości SSL...",
+  // Absurdalne hakerskie
+  "UWAGA: Włamywanie do serca... firewall emocjonalny wykryty...",
+  "Brutforce na hasło \"przebaczenie\"... próba 1337/9999...",
+  "Root access do sumienia... PRZYZNANO...",
+  "Injecting żal.dll do procesu systemowego...",
+  "Obchodzenie zapory antyprzeprosinowej...",
+  "Skanowanie portów emocji: 8080 OTWARTY (nadzieja)...",
+  "Man-in-the-middle między dumą a skruchą...",
+  "Exploit znaleziony: CVE-2026-SORRY...",
+  "sudo rm -rf /ego/* ... wykonuję...",
+  "chmod 777 /serce/przebaczenie...",
+  // Jeszcze bardziej absurdalne
+  "Terraformowanie krajobrazu emocjonalnego...",
+  "Uruchamiam Large Language Model skruchy (LLM-S)...",
+  "Kwantowa superpozycja żalu i nadziei...",
+  "Ładowanie pluginu do płakania w deszczu...",
+  "Inicjalizacja sztucznej inteligencji przeprosinowej...",
+  "Reindeksowanie bazy danych \"Rzeczy Które Schrzaniłem\"...",
+  "Overclocking procesora empatii do 4.2 GHz...",
+  "Montowanie partycji /dev/skrucha...",
+  "Wypalanie CD-ROM z przeprosinami... BUFOR PUSTY... ponawiam...",
+  "Łączenie z bazą NATO... kod: FOXTROT-OSCAR-SORRY...",
+  "Analiza spektralna widma żalu...",
+  "Bootowanie systemu w trybie PRZEPRASZAM-SAFE-MODE...",
+  "Ładowanie Comic Sans do renderera przeprosin...",
+  "Odzyskiwanie danych z kosza na dumę...",
+  "Bip bup... bip bup... bip bup... przetwarzam..."
+];
+
+let popupIdCounter = 0;
+
+function createPopupDialog(title, icon, message, x, y) {
+  const id = 'popup-' + (popupIdCounter++);
+  const container = document.getElementById('popupContainer');
+  const div = document.createElement('div');
+  div.className = 'popup-dialog';
+  div.id = id;
+  div.style.left = x + 'px';
+  div.style.top = y + 'px';
+  div.innerHTML =
+    '<div class="popup-titlebar">' +
+      '<span>' + title + '</span>' +
+      '<button class="win-btn" onclick="dismissPopup(\'' + id + '\')">✕</button>' +
+    '</div>' +
+    '<div class="popup-body">' +
+      '<div class="popup-icon-row">' +
+        '<span class="p-icon">' + icon + '</span>' +
+        '<span class="p-text">' + message + '</span>' +
+      '</div>' +
+      '<div class="popup-progress"><div class="popup-progress-fill" id="' + id + '-fill"></div></div>' +
+      '<div class="popup-status" id="' + id + '-status">Proszę czekać...</div>' +
+    '</div>';
+  container.appendChild(div);
+  return id;
+}
+
+function dismissPopup(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('closing');
+  setTimeout(() => el.remove(), 120);
+}
+
+function animatePopupProgress(id, duration, statusMessages) {
+  const fill = document.getElementById(id + '-fill');
+  const status = document.getElementById(id + '-status');
+  if (!fill) return;
+  let elapsed = 0;
+  const step = 80;
+  const interval = setInterval(() => {
+    elapsed += step;
+    const pct = Math.min(100, (elapsed / duration) * 100);
+    fill.style.width = pct + '%';
+    if (statusMessages && statusMessages.length > 0) {
+      const idx = Math.floor((pct / 100) * statusMessages.length);
+      if (status && idx < statusMessages.length) status.textContent = statusMessages[idx];
+    }
+    if (elapsed >= duration) {
+      clearInterval(interval);
+      fill.style.width = '100%';
+      if (status) status.textContent = 'Gotowe!';
+      setTimeout(() => dismissPopup(id), 400);
+    }
+  }, step);
+}
+
 function generateApology() {
   const level = document.getElementById('level').value;
   const target = document.getElementById('target').value;
@@ -1722,7 +1951,6 @@ function generateApology() {
     text = getRandomItem(desperationPrefixes) + text + getRandomItem(desperationSuffixes);
   }
 
-  // Show progress bar
   const progressEl = document.getElementById('progressBar');
   const progressFill = document.getElementById('progressFill');
   const progressLabel = document.getElementById('progressLabel');
@@ -1736,24 +1964,128 @@ function generateApology() {
   outputArea.classList.remove('visible');
   progressFill.style.width = '0%';
 
+  // Shuffle and pick unique messages for this run
+  const shuffled = [...simsMessages].sort(() => Math.random() - 0.5);
+  let msgIdx = 0;
+  function nextSimsMsg() { return shuffled[msgIdx++ % shuffled.length]; }
+
+  // Main progress stages (with Sims messages)
   const stages = [
-    { pct: 15, msg: "Ładowanie modułu skruchy..." },
-    { pct: 30, msg: "Analizowanie poziomu przewinienia..." },
-    { pct: 50, msg: "Kalibrowanie szczerości... bip bup..." },
-    { pct: 70, msg: "Dobieranie słów... to trudniejsze niż myślisz..." },
-    { pct: 85, msg: desperation ? "🚨 TRYB DESPERACJI! Ładuję łzy..." : "Formatowanie przeprosin..." },
-    { pct: 100, msg: "Gotowe! Przeprosiny skompilowane!" }
+    { pct: 8,   msg: nextSimsMsg() },
+    { pct: 16,  msg: nextSimsMsg() },
+    { pct: 25,  msg: nextSimsMsg() },
+    { pct: 35,  msg: nextSimsMsg() },
+    { pct: 45,  msg: nextSimsMsg() },
+    { pct: 55,  msg: nextSimsMsg() },
+    { pct: 65,  msg: nextSimsMsg() },
+    { pct: 75,  msg: nextSimsMsg() },
+    { pct: 85,  msg: nextSimsMsg() },
+    { pct: 92,  msg: nextSimsMsg() },
+    { pct: 100, msg: ">> PRZEPROSINY SKOMPILOWANE <<" }
   ];
 
+  // Determine how many popups based on level
+  const popupCounts = { drobnostka: 2, powazna: 3, katastrofa: 5, apokalipsa: 7 };
+  let numPopups = popupCounts[level] || 3;
+  if (desperation) numPopups += 3;
+
+  // Popup schedule - spawn popups at various times during the main progress
+  const popupTitles = [
+    ["skrucha.exe", "⚙️"],
+    ["Moduł Łez v2.0", "😢"],
+    ["DefragSumienie.exe", "💾"],
+    ["KalibracjaŻalu.bat", "📊"],
+    ["SERWER_PRZEBACZENIA", "🌐"],
+    ["EmpatiaService.dll", "🧠"],
+    ["FlowerSelector 3000", "🌹"],
+    ["AntyDuma Firewall", "🛡️"],
+    ["KlęczanieOptimizer", "🦵"],
+    ["SzczerośćValidator", "✅"],
+    ["Bip Bup Engine", "🤖"],
+    ["root@sumienie:~#", "💀"],
+    ["GOGOLA MAINFRAME", "🖥️"],
+    ["TearDriver.sys", "💧"],
+    ["HACK://serce", "🔓"],
+  ];
+
+  const desktopArea = document.querySelector('.desktop-area');
+  const maxX = desktopArea.clientWidth - 320;
+  const maxY = desktopArea.clientHeight - 180;
+
+  for (let p = 0; p < numPopups; p++) {
+    const delay = 300 + p * (desperation ? 350 : 500) + Math.random() * 400;
+    const duration = 1500 + Math.random() * 2000;
+    setTimeout(() => {
+      const [title, icon] = popupTitles[Math.floor(Math.random() * popupTitles.length)];
+      const x = 80 + Math.random() * Math.max(100, maxX - 80);
+      const y = 20 + Math.random() * Math.max(60, maxY - 20);
+      const popId = createPopupDialog(
+        title,
+        icon,
+        '<b>' + nextSimsMsg() + '</b>',
+        x, y
+      );
+      animatePopupProgress(popId, duration, [
+        nextSimsMsg(),
+        nextSimsMsg(),
+        nextSimsMsg(),
+        "Finalizuję..."
+      ]);
+    }, delay);
+  }
+
+  // Desperation: extra error popup
+  if (desperation) {
+    setTimeout(() => {
+      const x = 100 + Math.random() * Math.max(100, maxX - 100);
+      const y = 40 + Math.random() * Math.max(60, maxY - 40);
+      const errId = createPopupDialog(
+        '⚠️ OSTRZEŻENIE',
+        '🚨',
+        '<b>UWAGA:</b> Poziom skruchy przekroczył dopuszczalne normy!<br><br>' +
+        'Ciśnienie w module żalu: <b>847 hPa</b><br>' +
+        'Temperatura sumienia: <b>98.6°C</b><br>' +
+        'Ryzyko eksplozji emocjonalnej: <b style="color:red">KRYTYCZNE</b>',
+        x, y
+      );
+      setTimeout(() => dismissPopup(errId), 4000);
+    }, 1500);
+
+    // "ACCESS GRANTED" hacker popup
+    setTimeout(() => {
+      const x = 60 + Math.random() * Math.max(100, maxX - 60);
+      const y = 60 + Math.random() * Math.max(60, maxY - 60);
+      const hackId = createPopupDialog(
+        'root@gogola:~# DOSTĘP',
+        '💀',
+        '<span style="font-family: VT323, monospace; color: #00aa00; font-size: 13px;">' +
+        '> Łączenie z sercem...<br>' +
+        '> Omijanie firewalla dumy...<br>' +
+        '> Injecting skrucha.dll...<br>' +
+        '> <b style="color: #00ff00;">DOSTĘP PRZYZNANO</b><br>' +
+        '> Przebaczenie: <b style="color: #ffff00;">W TOKU</b></span>',
+        x, y
+      );
+      setTimeout(() => dismissPopup(hackId), 5000);
+    }, 2500);
+  }
+
+  // Main progress animation
   let i = 0;
+  const totalTime = numPopups * 500 + 2500;
+  const stageDelay = totalTime / stages.length;
+
   function nextStage() {
     if (i < stages.length) {
       progressFill.style.width = stages[i].pct + '%';
       progressLabel.textContent = stages[i].msg;
       i++;
-      setTimeout(nextStage, 350 + Math.random() * 250);
+      setTimeout(nextStage, stageDelay * (0.7 + Math.random() * 0.6));
     } else {
       setTimeout(() => {
+        // Clean up any remaining popups
+        document.querySelectorAll('.popup-dialog').forEach(p => dismissPopup(p.id));
+
         progressEl.classList.remove('visible');
         outputArea.classList.add('visible');
         outputBox.innerHTML = '<span class="cursor"></span>';
@@ -1763,23 +2095,33 @@ function generateApology() {
           btn.disabled = false;
           btn.textContent = '▶ WYGENERUJ PRZEPROSINY ◀';
 
-          // Update counter
           apologyCount++;
           document.getElementById('counter').textContent = apologyCount.toString().padStart(3, '0');
           document.getElementById('statusCounter').textContent = 'Przeprosin: ' + apologyCount;
-
-          // Update gauge
           updateGauge();
 
-          // Show bip bup msgbox on first generation
           if (apologyCount === 1) {
             setTimeout(() => {
               showMsgBox('Komputer pokładowy', '🖥️',
-                '<b>Bip bup!</b><br><br>Twoje pierwszesze przeprosiny zostały pomyślnie wygenerowane!<br><br><i>Potrafi mówić prawie jak człowiek!</i>');
+                '<b>Bip bup!</b><br><br>Twoje pierwsze przeprosiny zostały pomyślnie wygenerowane!<br><br><i>Potrafi mówić prawie jak człowiek!</i>');
             }, 500);
           }
+
+          // Random chance of bonus popup after generation
+          if (Math.random() < 0.4) {
+            setTimeout(() => {
+              showMsgBox('Gogola-Code™ — Porada', '💡',
+                getRandomItem([
+                  '<b>Porada dnia:</b><br><br>Statystyki pokazują, że przeprosiny z kwiatami są o 73.2% skuteczniejsze.<br><br><i>Użyj Generatora Bukietów Emoji!</i>',
+                  '<b>Czy wiesz, że...</b><br><br>Przeciętny użytkownik Gogola-Code generuje 4.7 przeprosin dziennie?<br><br><i>Jesteś powyżej/poniżej średniej?</i>',
+                  '<b>Wskazówka:</b><br><br>Tryb Desperacji zwiększa skuteczność przeprosin o 340%.*<br><br><i>*Dane niepotwierdzone naukowo. Bip bup.</i>',
+                  '<b>FUN FACT:</b><br><br>Silnik Skrucha™ zużył właśnie 847 megabajtów empatii.<br><br><i>Twój dysk twardy sumienia jest zapełniony w 94%.</i>',
+                  '<b>ALERT:</b><br><br>Wykryto podwyższone stężenie żalu w pamięci RAM.<br><br>Zalecana defragmentacja sumienia.<br><br><i>Uruchomić DefragSumienie.exe? (Nie da się. Bip bup.)</i>',
+                ]));
+            }, 1200);
+          }
         });
-      }, 400);
+      }, 600);
     }
   }
   nextStage();
