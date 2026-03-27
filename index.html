@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gogola-Code™ — Fajny Komputer do Przepraszania</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Win95 palette */
+  --win-bg: #008080;
+  --win-gray: #c0c0c0;
+  --win-dark: #808080;
+  --win-darker: #404040;
+  --win-light: #dfdfdf;
+  --win-white: #ffffff;
+  --win-blue: #000080;
+  --win-blue-bright: #0000ff;
+  --win-title-active: linear-gradient(90deg, #000080, #1084d0);
+  --win-title-inactive: linear-gradient(90deg, #808080, #b0b0b0);
+  --win-black: #000000;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+  font-size: 11px;
+  cursor: default;
+  user-select: none;
+}
+
+/* ═══ DESKTOP ═══ */
+.desktop {
+  width: 100%;
+  height: 100%;
+  background: var(--win-bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Starfield background */
+.desktop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 10% 20%, white, transparent),
+    radial-gradient(1px 1px at 30% 70%, white, transparent),
+    radial-gradient(1.5px 1.5px at 50% 10%, #ffff88, transparent),
+    radial-gradient(1px 1px at 70% 40%, white, transparent),
+    radial-gradient(1px 1px at 90% 80%, white, transparent),
+    radial-gradient(1.5px 1.5px at 15% 90%, #88ffff, transparent),
+    radial-gradient(1px 1px at 85% 15%, white, transparent),
+    radial-gradient(1px 1px at 45% 55%, white, transparent),
+    radial-gradient(1.5px 1.5px at 60% 85%, #ffff88, transparent),
+    radial-gradient(1px 1px at 25% 45%, white, transparent),
+    radial-gradient(1px 1px at 75% 65%, white, transparent),
+    radial-gradient(1px 1px at 5% 50%, white, transparent),
+    radial-gradient(1.5px 1.5px at 95% 50%, #88ffff, transparent),
+    radial-gradient(1px 1px at 35% 30%, white, transparent),
+    radial-gradient(1px 1px at 55% 95%, white, transparent),
+    radial-gradient(1px 1px at 80% 5%, white, transparent);
+  animation: twinkle 4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.7; }
+}
+
+.desktop-area {
+  flex: 1;
+  position: relative;
+  padding: 16px;
+}
+
+/* ═══ DESKTOP ICONS ═══ */
+.desktop-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 70px;
+  padding: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.desktop-icon:hover {
+  background: rgba(0, 0, 128, 0.3);
+  border: 1px dotted white;
+}
+
+.desktop-icon:active .icon-label {
+  background: var(--win-blue);
+}
+
+.desktop-icon .icon-img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.icon-label {
+  color: white;
+  font-size: 11px;
+  text-align: center;
+  text-shadow: 1px 1px 1px black;
+  padding: 1px 2px;
+  word-wrap: break-word;
+  max-width: 68px;
+}
+
+/* ═══ WIN95 WINDOW ═══ */
+.win-window {
+  position: absolute;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  box-shadow: inset 1px 1px 0 var(--win-light), inset -1px -1px 0 var(--win-dark);
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+}
+
+.win-window.hidden { display: none; }
+
+.win-titlebar {
+  background: var(--win-title-active);
+  padding: 2px 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: grab;
+  min-height: 20px;
+}
+
+.win-window.inactive .win-titlebar {
+  background: var(--win-title-inactive);
+}
+
+.win-titlebar-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.win-titlebar-text {
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.win-titlebar-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+.win-btn {
+  width: 16px;
+  height: 14px;
+  background: var(--win-gray);
+  border-top: 1px solid var(--win-white);
+  border-left: 1px solid var(--win-white);
+  border-right: 1px solid var(--win-black);
+  border-bottom: 1px solid var(--win-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Marlett', sans-serif;
+  line-height: 1;
+  padding: 0;
+  color: black;
+}
+
+.win-btn:active {
+  border-top: 1px solid var(--win-black);
+  border-left: 1px solid var(--win-black);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+.win-menubar {
+  display: flex;
+  padding: 2px 0;
+  border-bottom: 1px solid var(--win-dark);
+}
+
+.win-menu-item {
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.win-menu-item:hover {
+  background: var(--win-blue);
+  color: white;
+}
+
+.win-body {
+  flex: 1;
+  overflow: auto;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  margin: 2px;
+}
+
+.win-statusbar {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  gap: 4px;
+  min-height: 20px;
+  border-top: 1px solid var(--win-dark);
+}
+
+.win-status-section {
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  padding: 1px 6px;
+  font-size: 11px;
+  flex: 1;
+}
+
+/* ═══ TASKBAR ═══ */
+.taskbar {
+  height: 30px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  display: flex;
+  align-items: center;
+  padding: 2px 2px;
+  gap: 4px;
+  z-index: 1000;
+}
+
+.start-btn {
+  height: 24px;
+  padding: 2px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.start-btn:active, .start-btn.pressed {
+  border-top: 2px solid var(--win-black);
+  border-left: 2px solid var(--win-black);
+  border-right: 2px solid var(--win-white);
+  border-bottom: 2px solid var(--win-white);
+}
+
+.start-btn .win-logo {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.taskbar-tasks {
+  flex: 1;
+  display: flex;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.taskbar-task {
+  height: 24px;
+  padding: 2px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  cursor: pointer;
+  font-size: 11px;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.taskbar-task.active {
+  border-top: 2px solid var(--win-black);
+  border-left: 2px solid var(--win-black);
+  border-right: 2px solid var(--win-white);
+  border-bottom: 2px solid var(--win-white);
+  background: #b0b0b0;
+}
+
+.taskbar-tray {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  height: 24px;
+  font-size: 11px;
+}
+
+.tray-icon { font-size: 13px; }
+
+/* ═══ START MENU ═══ */
+.start-menu {
+  position: absolute;
+  bottom: 30px;
+  left: 2px;
+  width: 200px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  z-index: 2000;
+  display: none;
+  flex-direction: column;
+}
+
+.start-menu.open { display: flex; }
+
+.start-menu-sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(to top, #000080, #1084d0);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+}
+
+.start-menu-sidebar span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.start-menu-items {
+  margin-left: 24px;
+  padding: 4px 0;
+}
+
+.start-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.start-menu-item:hover {
+  background: var(--win-blue);
+  color: white;
+}
+
+.start-menu-item .item-icon { font-size: 18px; width: 24px; text-align: center; }
+
+.start-menu-sep {
+  height: 1px;
+  background: var(--win-dark);
+  margin: 2px 4px 2px 28px;
+  border-bottom: 1px solid var(--win-white);
+}
+
+/* ═══ GOGOLA-CODE APP CONTENT ═══ */
+.app-content {
+  background: white;
+  min-height: 100%;
+  overflow: auto;
+}
+
+/* WordArt Title */
+.wordart-container {
+  text-align: center;
+  padding: 12px 8px 4px;
+  background: linear-gradient(180deg, #ffffcc, #ffcc00, #ff9900, #ff6600);
+  border-bottom: 3px solid #cc6600;
+  position: relative;
+  overflow: hidden;
+}
+
+.wordart-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255,255,255,0.1) 10px,
+    rgba(255,255,255,0.1) 20px
+  );
+}
+
+.wordart {
+  font-family: 'VT323', 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 42px;
+  font-weight: bold;
+  background: linear-gradient(180deg, #ff0000, #ff6600, #ffcc00, #00ff00, #0066ff, #9900cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(2px 2px 0 #000) drop-shadow(-1px -1px 0 rgba(255,255,255,0.5));
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  animation: wordart-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes wordart-glow {
+  0% { filter: drop-shadow(2px 2px 0 #000) drop-shadow(0 0 10px rgba(255,200,0,0.3)); }
+  100% { filter: drop-shadow(2px 2px 0 #000) drop-shadow(0 0 20px rgba(255,200,0,0.6)); }
+}
+
+.wordart-sub {
+  font-family: 'Comic Sans MS', 'Comic Sans', 'VT323', cursive;
+  font-size: 14px;
+  color: #800000;
+  font-style: italic;
+  margin-top: 2px;
+  position: relative;
+  text-shadow: 0 0 10px rgba(255,255,0,0.5);
+}
+
+/* Marquee */
+.marquee-bar {
+  background: #000080;
+  color: #ffff00;
+  padding: 3px 0;
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 12px;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-text {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+  padding-left: 100%;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Animated construction GIF simulation */
+.construction-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffff00;
+  padding: 2px 8px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+}
+
+.construction-bar span {
+  font-size: 11px;
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-weight: bold;
+  color: #000;
+  animation: blink-text 0.8s step-end infinite;
+}
+
+.hard-hat {
+  animation: bounce-hat 0.5s ease-in-out infinite alternate;
+  font-size: 16px;
+}
+
+@keyframes bounce-hat { 0% { transform: translateY(0); } 100% { transform: translateY(-3px); } }
+@keyframes blink-text { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* Main form area */
+.app-form {
+  padding: 12px 16px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  background: var(--win-gray);
+  margin: 8px;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+}
+
+.form-title {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 14px;
+  font-weight: bold;
+  color: #800000;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Win95 GroupBox */
+.groupbox {
+  border: 2px groove var(--win-gray);
+  padding: 12px 10px 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.groupbox-label {
+  position: absolute;
+  top: -8px;
+  left: 10px;
+  background: var(--win-gray);
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.form-row label {
+  min-width: 130px;
+  font-size: 11px;
+}
+
+.win-select, .win-input {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  padding: 3px 4px;
+  background: white;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  box-shadow: inset 1px 1px 0 var(--win-black);
+  flex: 1;
+  outline: none;
+}
+
+.win-select { cursor: pointer; }
+
+/* Win95 Checkbox */
+.win-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.win-checkbox input { display: none; }
+
+.win-checkbox .check-box {
+  width: 13px;
+  height: 13px;
+  background: white;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  box-shadow: inset 1px 1px 0 var(--win-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: black;
+  flex-shrink: 0;
+}
+
+.win-checkbox input:checked + .check-box::after {
+  content: '✓';
+}
+
+.win-checkbox .check-label {
+  font-size: 11px;
+}
+
+.win-checkbox .check-label u { text-decoration: underline; }
+
+/* Win95 Buttons */
+.win-button {
+  padding: 4px 16px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.win-button:active {
+  border-top: 2px solid var(--win-black);
+  border-left: 2px solid var(--win-black);
+  border-right: 2px solid var(--win-white);
+  border-bottom: 2px solid var(--win-white);
+  padding: 5px 15px 3px 17px;
+}
+
+.win-button.primary {
+  border: 2px solid var(--win-black);
+  box-shadow: inset 2px 2px 0 var(--win-white), inset -2px -2px 0 var(--win-dark);
+}
+
+.win-button.primary:active {
+  box-shadow: inset 2px 2px 0 var(--win-dark), inset -2px -2px 0 var(--win-white);
+}
+
+.btn-big {
+  background: linear-gradient(180deg, #ff9900, #ff6600);
+  color: white;
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 24px;
+  width: 100%;
+  margin-top: 8px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  border-top: 2px solid #ffcc66;
+  border-left: 2px solid #ffcc66;
+  border-right: 2px solid #993300;
+  border-bottom: 2px solid #993300;
+}
+
+.btn-big:hover {
+  background: linear-gradient(180deg, #ffaa22, #ff7722);
+}
+
+.btn-big:active {
+  background: linear-gradient(180deg, #cc5500, #ff6600);
+  border-top: 2px solid #993300;
+  border-left: 2px solid #993300;
+  border-right: 2px solid #ffcc66;
+  border-bottom: 2px solid #ffcc66;
+  padding: 9px 23px 7px 25px;
+}
+
+/* Output area */
+.output-frame {
+  margin: 8px;
+  background: #000000;
+  border-top: 2px solid var(--win-dark);
+  border-left: 2px solid var(--win-dark);
+  border-right: 2px solid var(--win-white);
+  border-bottom: 2px solid var(--win-white);
+  box-shadow: inset 1px 1px 0 var(--win-black);
+  display: none;
+}
+
+.output-frame.visible { display: block; }
+
+.output-header-bar {
+  background: #000080;
+  color: #00ff00;
+  padding: 3px 8px;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.output-text {
+  color: #00ff00;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 16px;
+  padding: 12px;
+  line-height: 1.6;
+  min-height: 60px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+}
+
+.output-text .cursor {
+  display: inline-block;
+  width: 10px;
+  height: 18px;
+  background: #00ff00;
+  animation: blink-cursor 0.6s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Advanced tools section */
+.tools-area {
+  margin: 8px;
+  padding: 0;
+}
+
+.tools-title {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 13px;
+  font-weight: bold;
+  color: #0000ff;
+  text-align: center;
+  margin-bottom: 8px;
+  text-decoration: underline;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.tool-box {
+  background: var(--win-gray);
+  border: 2px groove var(--win-gray);
+  padding: 8px;
+  text-align: center;
+}
+
+.tool-box-title {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 12px;
+  font-weight: bold;
+  color: #800080;
+  margin-bottom: 6px;
+}
+
+.tool-box-icon { font-size: 28px; margin-bottom: 4px; }
+
+.counter-big {
+  font-family: 'VT323', monospace;
+  font-size: 42px;
+  color: #ff0000;
+  text-shadow: 2px 2px 0 #800000;
+  line-height: 1;
+}
+
+.counter-label {
+  font-size: 10px;
+  color: #666;
+}
+
+.bouquet-display {
+  font-size: 18px;
+  min-height: 28px;
+  letter-spacing: 2px;
+  word-break: break-all;
+}
+
+/* Gauge */
+.gauge-box {
+  width: 100%;
+  height: 20px;
+  background: white;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  box-shadow: inset 1px 1px 0 var(--win-black);
+  position: relative;
+  margin: 6px 0 4px;
+  overflow: hidden;
+}
+
+.gauge-bar {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    #000080 0px,
+    #000080 8px,
+    transparent 8px,
+    transparent 10px
+  );
+  width: 0%;
+  transition: width 1s ease;
+}
+
+.gauge-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #333;
+}
+
+/* Visitor counter at bottom */
+.visitor-counter {
+  text-align: center;
+  padding: 8px;
+  margin: 4px 8px 8px;
+  background: #000000;
+  border: 2px ridge #808080;
+}
+
+.visitor-counter span {
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 14px;
+  color: #00ff00;
+}
+
+.visitor-count {
+  font-family: 'VT323', 'Courier New', monospace;
+  background: #330000;
+  color: #ff0000;
+  padding: 2px 8px;
+  border: 1px inset #808080;
+  font-size: 16px;
+  letter-spacing: 2px;
+  display: inline-block;
+  margin: 0 4px;
+}
+
+/* Footer inside app */
+.app-footer {
+  text-align: center;
+  padding: 6px;
+  background: linear-gradient(90deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 10px;
+  color: #000;
+  border-top: 2px solid #000;
+}
+
+.app-footer a {
+  color: #0000ff;
+}
+
+/* Spinning email gif simulation */
+.spin-icon {
+  display: inline-block;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+/* Under construction */
+.uc-stripe {
+  height: 8px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #000000,
+    #000000 10px,
+    #ffcc00 10px,
+    #ffcc00 20px
+  );
+}
+
+/* ═══ MESSAGE BOX / DIALOG ═══ */
+.msgbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 5000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.msgbox-overlay.visible {
+  display: flex;
+}
+
+.msgbox {
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  box-shadow: inset 1px 1px 0 var(--win-light), inset -1px -1px 0 var(--win-dark), 4px 4px 0 rgba(0,0,0,0.3);
+  min-width: 320px;
+  max-width: 440px;
+}
+
+.msgbox-title {
+  background: var(--win-title-active);
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.msgbox-title span {
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  flex: 1;
+}
+
+.msgbox-body {
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.msgbox-icon { font-size: 32px; flex-shrink: 0; }
+
+.msgbox-text {
+  font-size: 11px;
+  line-height: 1.5;
+  padding-top: 4px;
+}
+
+.msgbox-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px 14px;
+}
+
+/* ═══ ABOUT DIALOG ═══ */
+.about-logo {
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(180deg, #ffffff, #e0e0e0);
+}
+
+.about-logo .big-icon { font-size: 48px; }
+
+.about-text {
+  padding: 12px 20px;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.about-text b { color: #800000; }
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes rainbow {
+  0% { color: #ff0000; }
+  16% { color: #ff9900; }
+  33% { color: #ffff00; }
+  50% { color: #00ff00; }
+  66% { color: #0066ff; }
+  83% { color: #9900cc; }
+  100% { color: #ff0000; }
+}
+
+.rainbow-text {
+  animation: rainbow 3s linear infinite;
+  font-weight: bold;
+}
+
+/* Hover glow for links */
+.glow-link {
+  color: #0000ff;
+  cursor: pointer;
+}
+.glow-link:hover {
+  color: #ff0000;
+  text-decoration: underline;
+}
+
+/* Progress bar (for loading simulation) */
+.progress-container {
+  display: none;
+  margin: 8px 16px;
+  text-align: center;
+}
+
+.progress-container.visible { display: block; }
+
+.progress-label {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 11px;
+  margin-bottom: 4px;
+  color: #800000;
+}
+
+.progress-box {
+  width: 100%;
+  height: 20px;
+  background: white;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: repeating-linear-gradient(
+    90deg,
+    #000080 0px,
+    #000080 8px,
+    transparent 8px,
+    transparent 10px
+  );
+  transition: width 0.3s;
+}
+
+/* Tab control */
+.tab-bar {
+  display: flex;
+  padding: 0 4px;
+  margin-top: 4px;
+}
+
+.tab-btn {
+  padding: 3px 12px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-dark);
+  border-bottom: none;
+  cursor: pointer;
+  margin-right: 2px;
+  position: relative;
+  top: 2px;
+}
+
+.tab-btn.active {
+  background: var(--win-gray);
+  z-index: 1;
+  border-bottom: 2px solid var(--win-gray);
+  top: 2px;
+  padding-bottom: 5px;
+}
+
+/* Scrollbar Win95 style */
+.win-body::-webkit-scrollbar { width: 16px; }
+.win-body::-webkit-scrollbar-track { background: var(--win-gray); border: 1px solid var(--win-dark); }
+.win-body::-webkit-scrollbar-thumb {
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+}
+.win-body::-webkit-scrollbar-button { display: block; height: 16px; background: var(--win-gray); border: 1px outset var(--win-gray); }
+</style>
+</head>
+<body>
+
+<div class="desktop">
+  <div class="desktop-area">
+    <!-- Desktop Icons -->
+    <div class="desktop-icons">
+      <div class="desktop-icon" ondblclick="openApp()">
+        <div class="icon-img">🖥️</div>
+        <div class="icon-label">Gogola-Code</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openAbout()">
+        <div class="icon-img">❓</div>
+        <div class="icon-label">O programie</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openError()">
+        <div class="icon-img">🗑️</div>
+        <div class="icon-label">Kosz</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openError()">
+        <div class="icon-img">💾</div>
+        <div class="icon-label">Moje przeprosiny</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openError()">
+        <div class="icon-img">🌐</div>
+        <div class="icon-label">Internet Explorer</div>
+      </div>
+    </div>
+
+    <!-- ═══ MAIN APP WINDOW ═══ -->
+    <div class="win-window" id="mainWindow" style="top: 20px; left: 120px; width: 680px; height: calc(100% - 60px);">
+      <div class="win-titlebar" onmousedown="startDrag(event, 'mainWindow')">
+        <div class="win-titlebar-icon">🖥️</div>
+        <div class="win-titlebar-text">Gogola-Code™ — Fajny Komputer do Przepraszania v2.137</div>
+        <div class="win-titlebar-buttons">
+          <button class="win-btn" onclick="minimizeWin('mainWindow')">_</button>
+          <button class="win-btn" onclick="maximizeWin('mainWindow')">□</button>
+          <button class="win-btn" onclick="closeWin('mainWindow')">✕</button>
+        </div>
+      </div>
+      <div class="win-menubar">
+        <div class="win-menu-item" onclick="openAbout()">Plik</div>
+        <div class="win-menu-item" onclick="openError()">Edycja</div>
+        <div class="win-menu-item" onclick="openAbout()">Pomoc</div>
+      </div>
+      <div class="win-body" id="mainBody">
+        <div class="app-content">
+
+          <!-- WordArt Header -->
+          <div class="wordart-container">
+            <div class="wordart">✦ Gogola-Code ✦</div>
+            <div class="wordart-sub">~ Fajny Komputer do Przepraszania ~</div>
+          </div>
+
+          <!-- Marquee -->
+          <div class="marquee-bar">
+            <div class="marquee-text">
+              ★★★ UWAGA! To jest FAJNY KOMPUTER! Potrafi mówić prawie jak człowiek! Zawiera encyklopedię! Rozwiązuje zadania z logiki! Oraz PRZEPRASZA!!! ★★★ Wersja 2.137 ★★★ Napędzany silnikiem Skrucha™ ★★★ Bip bup! ★★★
+            </div>
+          </div>
+
+          <!-- Under construction -->
+          <div class="uc-stripe"></div>
+          <div class="construction-bar">
+            <span class="hard-hat">🚧</span>
+            <span>!! STRONA W BUDOWIE !!</span>
+            <span class="hard-hat">👷</span>
+            <span>!! ALE DZIAŁA !!</span>
+            <span class="hard-hat">🚧</span>
+          </div>
+          <div class="uc-stripe"></div>
+
+          <!-- Form -->
+          <div class="app-form">
+            <div class="form-title">⚡ GENERATOR PRZEPROSIN ⚡</div>
+
+            <div class="groupbox">
+              <div class="groupbox-label">Konfiguracja przeprosin</div>
+
+              <div class="form-row">
+                <label>Poziom przewinienia:</label>
+                <select class="win-select" id="level">
+                  <option value="drobnostka">🟢 Drobnostka</option>
+                  <option value="powazna" selected>🟡 Poważna sprawa</option>
+                  <option value="katastrofa">🟠 Katastrofa</option>
+                  <option value="apokalipsa">🔴 APOKALIPSA</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label>Kogo przepraszasz:</label>
+                <select class="win-select" id="target">
+                  <option value="partner">💕 Partnera/Partnerkę</option>
+                  <option value="mama">👩 Mamę</option>
+                  <option value="szef">👔 Szefa</option>
+                  <option value="kolega">🤝 Kolegę z pracy</option>
+                  <option value="sasiad">🏠 Sąsiada</option>
+                  <option value="kot">🐱 Kota</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label>Co zrobiłeś/aś:</label>
+                <input class="win-input" type="text" id="offense" placeholder="np. zjadłem ostatni sernik...">
+              </div>
+            </div>
+
+            <div class="groupbox">
+              <div class="groupbox-label">Opcje zaawansowane</div>
+              <label class="win-checkbox" id="desperationToggle">
+                <input type="checkbox" id="desperationCheck">
+                <span class="check-box"></span>
+                <span class="check-label">🚨 <b>Tryb <u>D</u>esperacji</b> (UWAGA: generuje skruchę na poziomie krytycznym!)</span>
+              </label>
+              <label class="win-checkbox">
+                <input type="checkbox" checked>
+                <span class="check-box"></span>
+                <span class="check-label">Dodaj emotikony (zalecane)</span>
+              </label>
+              <label class="win-checkbox">
+                <input type="checkbox" checked>
+                <span class="check-box"></span>
+                <span class="check-label">Silnik Skrucha™ aktywny</span>
+              </label>
+            </div>
+
+            <button class="win-button btn-big primary" id="generateBtn" onclick="generateApology()">
+              ▶ WYGENERUJ PRZEPROSINY ◀
+            </button>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="progress-container" id="progressBar">
+            <div class="progress-label" id="progressLabel">Kompilowanie skruchy... proszę czekać...</div>
+            <div class="progress-box">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+
+          <!-- Output -->
+          <div class="output-frame" id="outputArea">
+            <div class="output-header-bar">
+              <span>📟 C:\GOGOLA\OUTPUT\przeprosiny.txt</span>
+              <button class="win-button" style="font-size: 10px; padding: 1px 8px;" onclick="copyOutput()">Kopiuj</button>
+            </div>
+            <div class="output-text" id="outputBox"></div>
+          </div>
+
+          <!-- Advanced tools -->
+          <div class="tools-area">
+            <div class="uc-stripe" style="margin-bottom: 8px;"></div>
+            <div class="tools-title">✨ NARZĘDZIA ZAAWANSOWANE ✨</div>
+            <div class="tools-grid">
+
+              <!-- Bouquet -->
+              <div class="tool-box">
+                <div class="tool-box-icon">💐</div>
+                <div class="tool-box-title">Bukiet Emoji</div>
+                <div class="bouquet-display" id="bouquetOutput"></div>
+                <div style="margin-top: 6px; display: flex; gap: 4px; justify-content: center;">
+                  <button class="win-button" onclick="generateBouquet()">Generuj!</button>
+                  <button class="win-button" onclick="copyBouquet()">Kopiuj</button>
+                </div>
+              </div>
+
+              <!-- Counter -->
+              <div class="tool-box">
+                <div class="tool-box-icon">📊</div>
+                <div class="tool-box-title">Licznik Przeprosin</div>
+                <div class="counter-big" id="counter">000</div>
+                <div class="counter-label">w tej sesji</div>
+              </div>
+
+              <!-- Gauge -->
+              <div class="tool-box">
+                <div class="tool-box-icon">🔥</div>
+                <div class="tool-box-title">Skala Skruchy</div>
+                <div class="gauge-box">
+                  <div class="gauge-bar" id="gaugeFill"></div>
+                </div>
+                <div class="gauge-label-row">
+                  <span>"meh"</span>
+                  <span id="gaugeValue" style="font-weight: bold; color: #ff0000;">0%</span>
+                  <span>"totalna skrucha"</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Visitor counter -->
+          <div class="visitor-counter">
+            <span>Jesteś odwiedzającym numer: </span>
+            <span class="visitor-count" id="visitorCount">000137</span>
+            <span> od 1997 roku</span>
+          </div>
+
+          <!-- Footer -->
+          <div class="uc-stripe"></div>
+          <div class="app-footer">
+            Gogola-Code v2.137 | Napędzany silnikiem Skrucha™ | © 2026 Gogola Industries
+            <br>
+            <span class="spin-icon">📧</span> Kontakt: gogola@przepraszam.pl |
+            Najlepiej oglądać w <b>Netscape Navigator 3.0</b> |
+            Rozdzielczość 800x600
+            <br>
+            <span style="font-size: 9px;">Żaden kot nie został skrzywdzony podczas tworzenia tych przeprosin. Bip bup.</span>
+          </div>
+
+        </div>
+      </div>
+      <div class="win-statusbar">
+        <div class="win-status-section">Gotowy</div>
+        <div class="win-status-section" style="flex: 0; min-width: 140px;" id="statusCounter">Przeprosin: 0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TASKBAR ═══ -->
+  <div class="taskbar">
+    <button class="start-btn" id="startBtn" onclick="toggleStartMenu()">
+      <span class="win-logo">🪟</span>
+      <span>Start</span>
+    </button>
+    <div class="taskbar-tasks" id="taskbarTasks">
+      <div class="taskbar-task active" id="task-mainWindow" onclick="focusWin('mainWindow')">
+        🖥️ Gogola-Code™
+      </div>
+    </div>
+    <div class="taskbar-tray">
+      <span class="tray-icon">🔊</span>
+      <span class="tray-icon">🔌</span>
+      <span id="clock">12:37</span>
+    </div>
+  </div>
+
+  <!-- Start Menu -->
+  <div class="start-menu" id="startMenu">
+    <div class="start-menu-sidebar">
+      <span>Gogola95</span>
+    </div>
+    <div class="start-menu-items">
+      <div class="start-menu-item" onclick="openApp(); toggleStartMenu();">
+        <span class="item-icon">🖥️</span> Gogola-Code
+      </div>
+      <div class="start-menu-item" onclick="openAbout(); toggleStartMenu();">
+        <span class="item-icon">❓</span> O programie
+      </div>
+      <div class="start-menu-sep"></div>
+      <div class="start-menu-item" onclick="openError(); toggleStartMenu();">
+        <span class="item-icon">📁</span> Moje przeprosiny
+      </div>
+      <div class="start-menu-item" onclick="openError(); toggleStartMenu();">
+        <span class="item-icon">⚙️</span> Ustawienia
+      </div>
+      <div class="start-menu-item" onclick="openError(); toggleStartMenu();">
+        <span class="item-icon">🔍</span> Znajdź...
+      </div>
+      <div class="start-menu-sep"></div>
+      <div class="start-menu-item" onclick="shutDown(); toggleStartMenu();">
+        <span class="item-icon">🔌</span> Zamknij system...
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MESSAGE BOX OVERLAY ═══ -->
+<div class="msgbox-overlay" id="msgOverlay">
+  <div class="msgbox" id="msgBox">
+    <div class="msgbox-title">
+      <span id="msgTitle">Gogola-Code</span>
+      <button class="win-btn" onclick="closeMsgBox()">✕</button>
+    </div>
+    <div class="msgbox-body">
+      <div class="msgbox-icon" id="msgIcon">⚠️</div>
+      <div class="msgbox-text" id="msgText">Wiadomość</div>
+    </div>
+    <div class="msgbox-buttons" id="msgButtons">
+      <button class="win-button primary" onclick="closeMsgBox()">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ STATE ═══
+let apologyCount = 0;
+let currentOutput = '';
+let dragTarget = null;
+let dragOffset = { x: 0, y: 0 };
+
+// ═══ CLOCK ═══
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ═══ VISITOR COUNT ═══
+let visitors = parseInt(localStorage.getItem('gogola_visitors') || '137');
+visitors++;
+localStorage.setItem('gogola_visitors', visitors);
+document.getElementById('visitorCount').textContent = visitors.toString().padStart(6, '0');
+
+// ═══ WINDOW MANAGEMENT ═══
+function startDrag(e, winId) {
+  dragTarget = document.getElementById(winId);
+  const rect = dragTarget.getBoundingClientRect();
+  dragOffset.x = e.clientX - rect.left;
+  dragOffset.y = e.clientY - rect.top;
+  focusWin(winId);
+  document.addEventListener('mousemove', onDrag);
+  document.addEventListener('mouseup', stopDrag);
+}
+
+function onDrag(e) {
+  if (!dragTarget) return;
+  dragTarget.style.left = (e.clientX - dragOffset.x) + 'px';
+  dragTarget.style.top = (e.clientY - dragOffset.y) + 'px';
+}
+
+function stopDrag() {
+  dragTarget = null;
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
+}
+
+function closeWin(id) {
+  document.getElementById(id).classList.add('hidden');
+  const task = document.getElementById('task-' + id);
+  if (task) task.remove();
+}
+
+function minimizeWin(id) {
+  document.getElementById(id).classList.add('hidden');
+  const task = document.getElementById('task-' + id);
+  if (task) task.classList.remove('active');
+}
+
+function maximizeWin(id) {
+  const win = document.getElementById(id);
+  if (win.style.width === '100%') {
+    win.style.top = '20px';
+    win.style.left = '120px';
+    win.style.width = '680px';
+    win.style.height = 'calc(100% - 60px)';
+  } else {
+    win.style.top = '0';
+    win.style.left = '0';
+    win.style.width = '100%';
+    win.style.height = 'calc(100% - 30px)';
+  }
+}
+
+function focusWin(id) {
+  const win = document.getElementById(id);
+  win.classList.remove('hidden', 'inactive');
+  // Ensure taskbar task
+  let task = document.getElementById('task-' + id);
+  if (task) task.classList.add('active');
+}
+
+function openApp() {
+  focusWin('mainWindow');
+}
+
+// ═══ START MENU ═══
+function toggleStartMenu() {
+  const menu = document.getElementById('startMenu');
+  const btn = document.getElementById('startBtn');
+  menu.classList.toggle('open');
+  btn.classList.toggle('pressed');
+}
+
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('startMenu');
+  const btn = document.getElementById('startBtn');
+  if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove('open');
+    btn.classList.remove('pressed');
+  }
+});
+
+// ═══ MESSAGE BOX ═══
+function showMsgBox(title, icon, text, buttons) {
+  document.getElementById('msgTitle').textContent = title;
+  document.getElementById('msgIcon').textContent = icon;
+  document.getElementById('msgText').innerHTML = text;
+  document.getElementById('msgOverlay').classList.add('visible');
+  if (buttons) {
+    document.getElementById('msgButtons').innerHTML = buttons;
+  } else {
+    document.getElementById('msgButtons').innerHTML = '<button class="win-button primary" onclick="closeMsgBox()">OK</button>';
+  }
+}
+
+function closeMsgBox() {
+  document.getElementById('msgOverlay').classList.remove('visible');
+}
+
+function openError() {
+  showMsgBox(
+    'Błąd',
+    '⛔',
+    '<b>Nie można otworzyć tej aplikacji.</b><br><br>Nasz fajny komputer jest zbyt zajęty przepraszaniem.<br><br>Spróbuj ponownie za 3-5 dni roboczych.<br><br><i>Przepraszamy za utrudnienia. (Ironic, prawda?)</i>'
+  );
+}
+
+function openAbout() {
+  showMsgBox(
+    'O programie Gogola-Code™',
+    '🖥️',
+    '<b>Gogola-Code™ v2.137</b><br>' +
+    '<i>Fajny Komputer do Przepraszania</i><br><br>' +
+    'Napędzany silnikiem <b>Skrucha™</b><br>' +
+    'Technologia: <b>Bip Bup Engine 3000</b><br><br>' +
+    '© 2026 Gogola Industries<br>' +
+    'Wszelkie prawa zastrzeżone.<br>' +
+    'Wszelkie przeprosiny niezastrzeżone.<br><br>' +
+    '<i>"Potrafi mówić prawie jak człowiek!<br>Zawiera encyklopedię! Rozwiązuje zadania z logiki!<br>I przede wszystkim — PRZEPRASZA!"</i><br><br>' +
+    '<span style="font-size:10px; color: #808080;">Pamięć: 640 KB skruchy powinno wystarczyć każdemu.</span>'
+  );
+}
+
+function shutDown() {
+  document.querySelector('.desktop').style.background = '#000';
+  document.querySelector('.desktop').innerHTML = '<div style="color: #ff9900; font-family: VT323, monospace; font-size: 28px; display: flex; align-items: center; justify-content: center; height: 100%; text-align: center; flex-direction: column; gap: 16px;"><div>Teraz możesz bezpiecznie wyłączyć komputer.</div><div style="font-size: 16px; color: #888;">(I iść przepraszać osobiście.)</div><div style="font-size: 14px; color: #555; margin-top: 20px;">Naciśnij F5 aby ponownie uruchomić system.</div></div>';
+}
+
+// ═══ APOLOGY DATABASE ═══
+const apologies = {
+  partner: {
+    drobnostka: [
+      "Kochanie, wiem że {offense} to nie było moje najlepsze posunięcie. Obiecuję, że następnym razem mój mózg włączy się PRZED moimi rękami. Kocham Cię bardziej niż Wi-Fi o pełnej mocy. 💕",
+      "Przepraszam za {offense}. Wiem, że to głupie. Ja jestem głupi/a. Ale przynajmniej jestem TWÓJ/A głupi/a. I zamierzam to naprawić — najlepiej kolacją w Twoim ulubionym miejscu? 🍽️",
+      "Hej, pamiętasz jak powiedziałaś/eś, że kochasz mnie mimo moich wad? No to... {offense}. Proszę, potwierdź że ta oferta jest nadal aktualna. 🙏",
+      "Za {offense} — oficjalnie przyznaję, że miałaś/eś rację. Tak, zapisz sobie tę datę. To się więcej nie powtórzy. (Ta obietnica jest ważna przynajmniej do jutra.) 📝"
+    ],
+    powazna: [
+      "Nie mam wymówki na {offense}. Naprawdę przepraszam. Wiem, że słowa to za mało, więc powiedz mi co mogę zrobić. Jestem gotów/gotowa na wszystko — nawet na weekendowe zakupy w IKEA. 😔",
+      "To, że {offense}, było poważne i widzę to. Przepraszam nie dlatego, że muszę, ale dlatego, że na to zasługujesz. Chcę być lepszą wersją siebie — dla Ciebie. ❤️",
+      "Siedzę tu i myślę o tym, jak {offense}. Czuję się okropnie. Nie chcę być osobą, która tak robi. Daj mi szansę to naprawić — będę działać, nie tylko mówić. 💔",
+      "Za {offense} — wiem, że zraniłem/am Twoje zaufanie. To boli mnie bardziej niż myślisz. Daj mi czas, żebym udowodnił/a, że to się nie powtórzy. 🥺"
+    ],
+    katastrofa: [
+      "Nie wiem nawet jak zacząć za {offense}. To co zrobiłem/am to była katastrofa i w pełni to rozumiem. Jeśli potrzebujesz czasu — weź go. Jeśli potrzebujesz rozmowy — jestem tu. Zrobię WSZYSTKO. 😢",
+      "Gdybym mógł/mogła cofnąć czas i nie {offense}, zrobiłbym/zrobiłabym to bez wahania. Wiem, że nie mogę. Ale mogę obiecać, że reszta mojego życia to będzie jedno wielkie \"przepraszam\" wyrażone czynami.",
+      "{offense} — to zdanie mnie prześladuje. Nie szukam wymówek. Nie zasługujesz na wymówki, zasługujesz na szczerość: schrzaniłem/am i jest mi niewymownie przykro. 💔💔💔",
+      "Za {offense}... po prostu przepraszam. Z całego serca. Powiedz mi, co muszę zrobić. Napiszę to na liście, podpiszę krwią i powiem mamie żeby pilnowała realizacji."
+    ],
+    apokalipsa: [
+      "To co się stało — {offense} — jest nie do opisania. Gdybym musiał/a sprzedać nerkę, nauczyć się tańczyć salsę i przejść przez Antarktydę boso — zrobiłbym to za jedno Twoje \"ok\". 🧎",
+      "Za {offense}: piszę to na kolanach (dosłownie). Rozumiem jeśli nie chcesz ze mną rozmawiać. Rozumiem jeśli potrzebujesz roku. Będę tu czekać z kwiatami, czekoladkami i kontem na terapię par. 💐😭",
+      "{offense}. Tak, ja. Tak, naprawdę. Kocham Cię tak bardzo, że to boli — i właśnie dlatego ta skrucha jest prawdziwa. Jestem gotów/gotowa na każdą pokutę. KAŻDĄ.",
+      "Pewnego dnia ktoś napisze książkę o tym jak {offense}. Rozdział końcowy będzie o tym, jak spędziłem/am resztę życia naprawiając to z determinacją godną bohaterów Tolkiena. 📖😭"
+    ]
+  },
+  mama: {
+    drobnostka: [
+      "Mamo, przepraszam że {offense}. Wiem, wiem — wychowałaś mnie lepiej. Obiecuję jeść więcej warzyw na poczet pokuty. 🥦",
+      "Droga Mamo, za {offense} — przepraszam. Tak, miałaś rację. Zawsze masz rację. Kiedy to w końcu zrozumiem? (Retoryczne pytanie.) 😅",
+      "Mamo, sorry za {offense}. Wiem, że Twoja koleżanka Basia ma córkę/syna, który by tak nigdy nie zrobił. Ale przynajmniej dzwonię... czasami. 📞",
+      "Przepraszam Mamo za {offense}. Na moją obronę — genetycznie jestem w 50% Twoim dziełem, więc technicznie... (Żartuję! Nie bij!) 🏃"
+    ],
+    powazna: [
+      "Mamo, to że {offense} jest czymś, za co naprawdę bardzo przepraszam. Wiem ile dla mnie robisz i nie zasłużyłaś na to. Przyjadę w weekend z Twoim ulubionym ciastem. 🎂",
+      "Za {offense} — Mamo, jest mi wstyd. Wychowałaś mnie na porządnego człowieka, a ja Ci się tak odpłacam. Przepraszam i obiecuję poprawę. Tym razem na serio. 😔",
+      "Mamo, {offense} i wiem że Cię zraniłem/am. Przepraszam z całego serca. Jesteś najważniejszą osobą w moim życiu i nie chcę żebyś myślała inaczej. ❤️",
+      "Za {offense}: Mamo, gdybym mógł/mogła to cofnąć — zrobiłbym to. Obiecuję przyjechać na Twój rosół i przepraszać osobiście. 🍲"
+    ],
+    katastrofa: [
+      "Mamo... {offense}. Nie mam słów. Wiem, że pewnie płaczesz i to mnie niszczy. Przepraszam Cię za wszystko. Przyjadę, usiądziemy, porozmawiamy. Kocham Cię. 😢❤️",
+      "To że {offense} to najgorsze co mogłem/am Ci zrobić. Przepraszam, Mamo. Wiem, że nie zasługujesz na taki stres. Zrobię WSZYSTKO żeby to naprawić.",
+      "Mamo, za {offense} — przepraszam Cię na kolanach. Wiem że Twoje serce jest za duże żeby mi nie wybaczyć, ale ja chcę na to przebaczenie ZASŁUŻYĆ. 🧎",
+      "Wiem, że po {offense} pewnie mówisz do taty \"a nie mówiłam?\". I masz rację. Całkowitą. Przepraszam, Mamo. Będę lepszy/a."
+    ],
+    apokalipsa: [
+      "Mamo, za {offense}... każda dobra cząstka mnie — to Twoja zasługa. Każda zła — to mój błąd. Przepraszam Cię milion razy i to nadal za mało. 😭💔",
+      "Po {offense} pewnie żałujesz tych 24 godzin porodu. Rozumiem. Ale Mamo — zrobię WSZYSTKO żeby znów mogła być ze mnie dumna. 🧎😭",
+      "Mamo... {offense}. Nie mam wymówki. Mam tylko jedno serce pełne żalu. Czy mogę przyjść w niedzielę? Przywiozę schabowe — TAK, sam/a zrobię. 🥩",
+      "Za {offense}: Mamo, piszę to ze łzami. Zasługujesz na lepszą wersję mnie. I obiecuję, że ją dostaniesz. Nawet jeśli muszę w końcu nauczyć się prasować. 👔"
+    ]
+  },
+  szef: {
+    drobnostka: [
+      "Szefie, przepraszam za {offense}. Już naprawiam. ETA: ASAP. Proszę nie patrzeć na mój git blame z wczoraj. 💻",
+      "Re: {offense} — przepraszam, to się więcej nie powtórzy. Już wdrażam poprawki i alarm na telefonie. ⏰",
+      "Przepraszam za {offense}. Biorę pełną odpowiedzialność. Na moją obronę: kawa jeszcze nie zdążyła zadziałać. Ale to nie wymówka — to diagnoza. ☕",
+      "Za {offense} — przepraszam. Wyciągnąłem wnioski. Punkt pierwszy: nigdy więcej. Punkt drugi: patrz punkt pierwszy. 📋"
+    ],
+    powazna: [
+      "Szefie, sprawa z {offense} to mój błąd i biorę za to pełną odpowiedzialność. Przygotowałem/am plan naprawczy. Przepraszam — to nie jest standard, którego oczekujesz. 📊",
+      "Chcę przeprosić za {offense}. To było nieprofesjonalne i poniżej poziomu, którego sam/a od siebie wymagam. Oto co zamierzam zrobić...",
+      "W związku z {offense} — przepraszam. Nie szukam wymówek. Czy możemy umówić się na 15-minutowy sync? 📅",
+      "Przepraszam za {offense}. Wiem, że to wpływa na cały zespół i jest mi podwójnie przykro. Taka sytuacja się nie powtórzy. 🤝"
+    ],
+    katastrofa: [
+      "Szefie, muszę szczerze porozmawiać o {offense}. To był poważny błąd. Przepraszam. Przygotowałem/am szczegółowy post-mortem i action plan. 📝",
+      "Biorę pełną odpowiedzialność za {offense}. Przepraszam. Root cause analysis, mitigation steps, prevention plan — kiedy mogę przedstawić? 🔧",
+      "To, że {offense}, jest nieakceptowalne. Przepraszam. Jestem gotów/gotowa zrobić nadgodziny, weekendy — cokolwiek trzeba. ⏰",
+      "Za {offense} — nie mam wymówki. Przepraszam. 100% zaangażowania w naprawę i lekcja na resztę kariery. 💪"
+    ],
+    apokalipsa: [
+      "Szefie... {offense}. Rozumiem jeśli będą konsekwencje. Przepraszam z głębi serca. Naprawię to, nawet jeśli będę musiał/a to robić po godzinach do emerytury. 😰",
+      "To największy błąd mojej kariery: {offense}. Mam plan naprawczy na 47 stron. Tak, zrobiłem/am go dziś w nocy. Nie, nie spałem/am. 📑",
+      "Za {offense}: Szefie, gdybym mógł/mogła wrócić w czasie... Oto mój plan naprawczy: [załączam prezentację, arkusz kalkulacyjny, i rezygnację — ostatnie to żart, przepraszam za żart]. 📎",
+      "Po {offense} — proszę, daj mi 48h na naprawę zanim zdecydujemy o dalszych krokach. Przepraszam. Kompletnie. 🙏"
+    ]
+  },
+  kolega: {
+    drobnostka: [
+      "Hej, sorry za {offense}. Mój błąd. Stawiam kawę? Albo dwie? Albo kawę i ciastko? Negocjuj. ☕🍰",
+      "Przepraszam za {offense}. Obiecuję poprawę. A jak nie — masz prawo ukraść mi kubek z biura. 🏆",
+      "Za {offense} — sorry! To było nieokej. Następny piątkowy lunch jest na mnie. 🍕",
+      "Oficjalnie przepraszam za {offense}. Niniejszym przekazuję Ci prawo do jednego darmowego \"a nie mówiłem/am\". 📜"
+    ],
+    powazna: [
+      "Hej, muszę przeprosić za {offense}. Serio, nie jest mi z tym dobrze. Cenię naszą współpracę. Mogę to jakoś naprawić? 😔",
+      "Za {offense} — przepraszam. Wiem, że to nie było fair. Wolę szczerą rozmowę niż niezręczne milczenie przy ekspresie. ☕",
+      "Słuchaj, {offense} i czuję się z tym źle. Przepraszam. Jesteś wartościowym kolegą/koleżanką i nie powinienem/powinnam tak postępować. 🤝",
+      "Przepraszam za {offense}. To było poniżej poziomu. Następnym razem przypomnij mi o tej chwili, to się opamiętam. 😅"
+    ],
+    katastrofa: [
+      "Muszę poważnie przeprosić za {offense}. To było nieakceptowalne i naprawdę jest mi przykro. Powiedz co mogę zrobić — to nie jest puste pytanie. 😔",
+      "Za {offense} — nie wiem co mnie napadło. Przepraszam Cię szczerze. Zasługujesz na lepszego kolegę/koleżankę. 🙏",
+      "Hej, {offense} to był z mojej strony mega fail. Przepraszam. Samo \"sorry\" to za mało — co konkretnie mogę zrobić? 😢",
+      "Przepraszam za {offense}. Serio. Nie chcę być \"tym kolegą\". Jeśli potrzebujesz czasu — rozumiem. 💔"
+    ],
+    apokalipsa: [
+      "To co zrobiłem/am — {offense} — to coś, za co będę Cię przepraszać do końca współpracy. I poza nią. Stawiam obiad codziennie przez miesiąc. 🍽️😭",
+      "Za {offense}: nie ma słów. Przepraszam z całego serca. Jestem gotów/a na cokolwiek. Nawet team building w escape roomie. 🔐",
+      "Chcę Cię przeprosić za {offense}. To najszczersza przeprosina jaką kiedykolwiek napisałem/am. Bo zazwyczaj nie robię TAKICH rzeczy. 😰",
+      "{offense} — nawet nie próbuję bagatelizować. Przepraszam. Masz pełne prawo być wściekły/a. Jestem tu. 🤝💔"
+    ]
+  },
+  sasiad: {
+    drobnostka: [
+      "Szanowny Sąsiedzie/Sąsiadko, przepraszam za {offense}. Obiecuję poprawę. W ramach rekompensaty — proszę o kawałek mojego ciasta. 🎂",
+      "Przepraszam za {offense}. Dobre sąsiedztwo to podstawa. To się nie powtórzy. A gdyby — proszę o pukanie, nie dzwonienie na policję. 😅",
+      "Za {offense} — przepraszam! To nie będzie norma. Wolę żebyśmy jedli razem grilla niż pisali donosy. 🍖",
+      "Drogi Sąsiedzie, sorry za {offense}. Wynika z chwilowej głupoty, nie złej woli. Karny przegląd zachowania co tydzień! 📋"
+    ],
+    powazna: [
+      "Szanowny Sąsiedzie/Sąsiadko, {offense} i naprawdę przepraszam. Rozumiem uciążliwość. Jak mogę to naprawić? 🏠",
+      "Przepraszam za {offense}. To było nieodpowiedzialne. Szanuję naszą wspólną przestrzeń i podejmę konkretne kroki. 🤝",
+      "Za {offense}: szczerze przepraszam. Każdy zasługuje na spokój we własnym domu. Zrobię wszystko co w mojej mocy. 🏡",
+      "Drogi Sąsiedzie, chcę przeprosić za {offense}. To nie powinno się wydarzyć. Zapraszam na kawę i rozmowę. ☕"
+    ],
+    katastrofa: [
+      "Szanowny Sąsiedzie/Sąsiadko, to że {offense} jest nie do przyjęcia. Przepraszam. Jestem gotów/gotowa pokryć wszelkie koszty. 💰😔",
+      "Za {offense} — składam najszczersze przeprosiny. Jestem do pełnej dyspozycji w kwestii naprawienia tego. 🛠️",
+      "Przepraszam za {offense}. To był poważny błąd. Traktuję tę sprawę priorytetowo. Jak mogę to zrekompensować? 🙏",
+      "Drogi Sąsiedzie, po {offense} rozumiem każdą frustrację. Przepraszam z całego serca. Obiecuję konkretne działania. 😢"
+    ],
+    apokalipsa: [
+      "Szanowny Sąsiedzie... {offense}. Nie mam słów. Pokryję WSZYSTKIE koszty. A jeśli trzeba — przeprowadzę się. (Mam nadzieję, że nie trzeba.) 😱💸",
+      "Po {offense} rozumiem skargę do wspólnoty. Ale proszę — daj mi szansę to naprawić. Przepraszam jak nigdy w życiu. 🧎",
+      "Za {offense}: to najgorsza rzecz w historii sąsiedztwa, a może i ludzkości. Przepraszam. Mam plan naprawczy. I budżet. I psychologa. 📋💰🧠",
+      "{offense} — Wspólnota Mieszkaniowa nie ma paragrafu na tak epicką porażkę. Przepraszam. Naprawię to za wszelką cenę. Dosłownie — proszę o fakturę. 🧾"
+    ]
+  },
+  kot: {
+    drobnostka: [
+      "Drogi Kocie, przepraszam że {offense}. Wiem, że jestem jedynie Twoim sługą. Czy dodatkowe przysmaki naprawią moją reputację? 🐱✨",
+      "O Najjaśniejszy Kocie, za {offense} — korę się u Twych łapek. Daj mi jeszcze jedną szansę. I nie zrzucaj kubka. 🐾",
+      "Miau... to znaczy, przepraszam za {offense}. Jako człowiek jestem z natury gorszy, ale staram się. Dodatkowe mokre na obiad? 🐟",
+      "Wasza Kociość, za {offense} przepraszam najpokorniej. Pokuta: 15 minut drapania za uszami i nowa zabawka z kocimiętką. 🧸"
+    ],
+    powazna: [
+      "O Wielki Kocie, {offense} i wiem, że złamałem/am Twoje kruche zaufanie. Przepraszam. Plan: tuńczyk, ciepły koc, absolutna uległość. 🐱👑",
+      "Przepraszam Cię, Kocie, za {offense}. Rozumiem wzrok pełny pogardy zamiast ZWYKŁEJ pogardy. Zamierzam odzyskać status \"do zniesienia\". 😿",
+      "Za {offense} — Drogi Kocie, zasłużyłem/am na każde ignorowanie i każde zrzucenie przedmiotu ze stołu. Przepraszam. Będę TWOIM człowiekiem. 🐾❤️",
+      "Najdroższy Kocie, po {offense} rozumiem jeśli nie będziesz na mnie patrzeć przez 3-5 dni roboczych. Zostawiam tuńczyka i nadzieję. 🐟💔"
+    ],
+    katastrofa: [
+      "Kocie, za {offense}... jestem załamany/a. W kociej skali to zdrada stanu. Poddaję się pod Twój osąd. Moje mieszkanie jest Twoje. (Zawsze było.) 🐱⚖️",
+      "O Najwyższy Kocie, {offense} to hańba na moje sumienie. Zamawiam najdroższe jedzenie i nowy drapak — ten WIELOPIĘTROWY. 🏰",
+      "Za {offense}: Kocie, jeśli potrafisz wybaczyć — udowodnisz, że jesteś istotą wyższą. Przepraszam łzami na srebrnej miseczce. 😭🍽️",
+      "Drogi Kocie, po {offense}: total submission. Przepraszam. Od dziś jestem oficjalnie Twoim niewolnikiem. (Wiem, już byłem, ale teraz z entuzjazmem.) 🧎🐱"
+    ],
+    apokalipsa: [
+      "Kocie... {offense}. Najczarniejsza godzina naszej relacji pan-sługa. Przepraszam wszystkimi językami: miau, mrrr, prrrr, i po ludzku. Składam duszę u Twoich łapek. 🐾😭💀",
+      "Za {offense}: O Kocie Koców, Władco Kanapy, Panie Kartonowego Pudełka — upadam na kolana. Moja karta kredytowa jest Twoja. Zooplus jest Twój. Moje serce zawsze było Twoje. 💳🐱👑",
+      "Po {offense} nie zasługuję nawet żebyś spał na mojej twarzy o 4 rano. Przepraszam. Premium jedzenie, codzienne mruczenie-sesje, i NIGDY więcej tego nie zrobię. 😭🐱💔",
+      "Kocie, za {offense}... rozumiem jeśli zamieszkasz u sąsiadów. Ale NIKT — NIKT — nie otworzy Ci puszki z taką miłością jak ja. Wróć. Proszę. Miau. 🥫💕😿"
+    ]
+  }
+};
+
+const desperationPrefixes = [
+  "⚠️⚠️⚠️ [TRYB DESPERACJI AKTYWNY] ⚠️⚠️⚠️\n>> POZIOM SKRUCHY: KRYTYCZNY <<\n>> SYSTEM PRZEPROSINOWY: PRZECIĄŻONY <<\n\n",
+  "🚨🚨🚨 DEFCON 1 🚨🚨🚨\n>> URUCHAMIAM PROTOKÓŁ TOTALNEJ SKRUCHY <<\n>> BIP BUP! PRZEPRASZAM! <<\n\n",
+  "💀💀💀 UWAGA: TRYB DESPERACJI 💀💀💀\n>> Silnik Skrucha™ pracuje na 200% <<\n>> Ryzyko przegrzania sumienia: WYSOKIE <<\n\n",
+  "🔴🔴🔴 ALARM PRZEPROSINOWY 🔴🔴🔴\n>> Inicjalizuję Mega-Przeprosinę™ <<\n>> Ładuję moduł płakania... OK <<\n>> Ładuję moduł klęczenia... OK <<\n\n"
+];
+
+const desperationSuffixes = [
+  "\n\n>> UWAGA: Gotów/a publicznie przepraszać na LinkedIn, Facebooku, tablicy ogłoszeń w klatce schodowej, i w gazecie lokalnej. <<",
+  "\n\n>> P.S. Klęczę pisząc tę wiadomość. Dosłownie. Kolana bolą. Ale zasługuję. Bip bup. <<",
+  "\n\n>> [Przeprosina wygenerowana na MAKSYMALNYM poziomie szczerości. Gdyby mogła płakać — zalałaby serwer.] <<",
+  "\n\n>> Dodatkowo: wytatuuję sobie \"PRZEPRASZAM\" jeśli trzeba. Negocjujmy lokalizację tatuażu. <<",
+  "\n\n>> 🕯️ Zapalono wirtualną świecę skruchy. Czas palenia: ∞. Bip bup, przepraszam. 🕯️ <<"
+];
+
+// ═══ CORE FUNCTIONS ═══
+
+function getRandomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateApology() {
+  const level = document.getElementById('level').value;
+  const target = document.getElementById('target').value;
+  const offenseInput = document.getElementById('offense').value.trim();
+  const offense = offenseInput || 'to co zrobiłem/am';
+  const desperation = document.getElementById('desperationCheck').checked;
+
+  const pool = apologies[target]?.[level] || apologies.partner.powazna;
+  let text = getRandomItem(pool).replace(/\{offense\}/g, offense);
+
+  if (desperation) {
+    text = getRandomItem(desperationPrefixes) + text + getRandomItem(desperationSuffixes);
+  }
+
+  // Show progress bar
+  const progressEl = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const outputArea = document.getElementById('outputArea');
+  const outputBox = document.getElementById('outputBox');
+  const btn = document.getElementById('generateBtn');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Kompilowanie skruchy...';
+  progressEl.classList.add('visible');
+  outputArea.classList.remove('visible');
+  progressFill.style.width = '0%';
+
+  const stages = [
+    { pct: 15, msg: "Ładowanie modułu skruchy..." },
+    { pct: 30, msg: "Analizowanie poziomu przewinienia..." },
+    { pct: 50, msg: "Kalibrowanie szczerości... bip bup..." },
+    { pct: 70, msg: "Dobieranie słów... to trudniejsze niż myślisz..." },
+    { pct: 85, msg: desperation ? "🚨 TRYB DESPERACJI! Ładuję łzy..." : "Formatowanie przeprosin..." },
+    { pct: 100, msg: "Gotowe! Przeprosiny skompilowane!" }
+  ];
+
+  let i = 0;
+  function nextStage() {
+    if (i < stages.length) {
+      progressFill.style.width = stages[i].pct + '%';
+      progressLabel.textContent = stages[i].msg;
+      i++;
+      setTimeout(nextStage, 350 + Math.random() * 250);
+    } else {
+      setTimeout(() => {
+        progressEl.classList.remove('visible');
+        outputArea.classList.add('visible');
+        outputBox.innerHTML = '<span class="cursor"></span>';
+
+        typeText(outputBox, text, 0, () => {
+          currentOutput = text;
+          btn.disabled = false;
+          btn.textContent = '▶ WYGENERUJ PRZEPROSINY ◀';
+
+          // Update counter
+          apologyCount++;
+          document.getElementById('counter').textContent = apologyCount.toString().padStart(3, '0');
+          document.getElementById('statusCounter').textContent = 'Przeprosin: ' + apologyCount;
+
+          // Update gauge
+          updateGauge();
+
+          // Show bip bup msgbox on first generation
+          if (apologyCount === 1) {
+            setTimeout(() => {
+              showMsgBox('Komputer pokładowy', '🖥️',
+                '<b>Bip bup!</b><br><br>Twoje pierwszesze przeprosiny zostały pomyślnie wygenerowane!<br><br><i>Potrafi mówić prawie jak człowiek!</i>');
+            }, 500);
+          }
+        });
+      }, 400);
+    }
+  }
+  nextStage();
+}
+
+function typeText(element, text, index, callback) {
+  if (index < text.length) {
+    const speed = text[index] === '\n' ? 20 : Math.random() * 10 + 3;
+    const chunk = text.substring(0, index + 1);
+    element.innerHTML = chunk.replace(/\n/g, '\n') + '<span class="cursor"></span>';
+    setTimeout(() => typeText(element, text, index + 1, callback), speed);
+  } else {
+    element.textContent = text;
+    if (callback) callback();
+  }
+}
+
+function updateGauge() {
+  const level = document.getElementById('level').value;
+  const desperation = document.getElementById('desperationCheck').checked;
+  const scores = { drobnostka: 20, powazna: 45, katastrofa: 75, apokalipsa: 95 };
+  let score = scores[level] || 50;
+  if (desperation) score = Math.min(100, score + 20);
+  score = Math.min(100, Math.max(0, score + Math.floor(Math.random() * 10 - 5)));
+
+  document.getElementById('gaugeFill').style.width = score + '%';
+  document.getElementById('gaugeValue').textContent = score + '%';
+}
+
+function copyOutput() {
+  if (!currentOutput) return;
+  navigator.clipboard.writeText(currentOutput).then(() => {
+    showMsgBox('Gogola-Code', '📋',
+      'Przeprosiny zostały skopiowane do schowka!<br><br>Teraz wystarczy je wkleić i wysłać.<br><i>Powodzenia! Bip bup.</i>');
+  });
+}
+
+function generateBouquet() {
+  const flowers = ['🌹','🌷','🌺','🌸','🌼','🌻','💐','🪷','🌿','🍀','💮','🏵️'];
+  const leaves = ['🌿','🍃','☘️'];
+  let bouquet = '';
+  const size = 6 + Math.floor(Math.random() * 5);
+  for (let i = 0; i < size; i++) {
+    bouquet += Math.random() > 0.25
+      ? flowers[Math.floor(Math.random() * flowers.length)]
+      : leaves[Math.floor(Math.random() * leaves.length)];
+  }
+  document.getElementById('bouquetOutput').textContent = bouquet;
+}
+
+function copyBouquet() {
+  const text = document.getElementById('bouquetOutput').textContent;
+  if (!text) return;
+  navigator.clipboard.writeText(text);
+  showMsgBox('Bukiet Emoji', '💐', 'Bukiet skopiowany!<br>Wklej go do wiadomości. Kwiaty nigdy nie zaszkodzą!');
+}
+
+// Enter key
+document.getElementById('offense').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') generateApology();
+});
+
+// Gauge on setting change
+document.getElementById('level').addEventListener('change', updateGauge);
+document.getElementById('desperationCheck').addEventListener('change', updateGauge);
+
+// Init
+updateGauge();
+generateBouquet();
+</script>
+</body>
+</html>
